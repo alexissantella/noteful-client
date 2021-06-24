@@ -92,7 +92,7 @@ export default class AddNote extends React.Component {
         this.setState({error: null})
 
         
-        fetch(`${config.notesUrl}`, {
+        fetch(`${config.API_ENDPOINT}/notes`, {
             method: 'POST',
             body: JSON.stringify(note),
             headers: {
@@ -125,7 +125,7 @@ export default class AddNote extends React.Component {
             <option 
                 key ={folder.id} 
                 id={folder.id}>
-            {folder.name}
+                {folder.name}
             </option>
             )
         })

@@ -5,13 +5,13 @@ import CircleButton from '../CircleButton/CircleButton'
 import './NoteListNav.css'
 import NotefulContext from '../NotefulContext'
 
+
 export default class NoteListNav extends Component {
   static contextType = NotefulContext;
 
-
   render() {
     const { folders=[] } = this.context
-
+    
     return (
       <div className='NoteListNav'>
         <ul className='NoteListNav__list'>
@@ -27,6 +27,7 @@ export default class NoteListNav extends Component {
             </li>
           )}
         </ul>
+        
         <div className='NoteListNav__button-wrapper'>
           <CircleButton
             
