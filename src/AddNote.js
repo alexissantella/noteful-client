@@ -70,13 +70,14 @@ export default class AddNote extends React.Component {
         let inputErrors;
 
         value = value.trim();
-        if (value < 1) {
+        if (value.length < 1) {
             inputErrors = `${name} is required.`;
             this.setState({
                 validationMessage: inputErrors,
                 [`${name}Valid`]: false,
                 hasErrors: true
             }, this.formValid );
+            
         } else {
             inputErrors = '';
             this.setState({
@@ -104,14 +105,17 @@ export default class AddNote extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         let { title } = this.state;
-        //  let { title, content, folderId } = this.state;
-        // need to validate the title before we submit
+
         this.validateEntry('title', title);
         if (!title || title.length === 0) {
             return;
         }
 
-        // if we get here, then we have a good title
+        this.validateEntry('folderSelect', title);
+        if (!title || title.length === 0) {
+            return;
+        }
+
 
         const { content, folderId } = this.state;
         const note = {
@@ -218,7 +222,13 @@ export default class AddNote extends React.Component {
                      Save
                  </button>
                  {this.state.titleValid === false &&
-                    <span>{this.state.validationMessage}</span>
+                    <span>Title is required. </span>
+                 }
+                 {this.state.contentValid === false &&
+                    <span>Note is required. </span>
+                 }
+                 {this.state.folderSelectValid === false &&
+                    <span>Please select folder. </span>
                  }
                 </div>
             </form> 
