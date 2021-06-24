@@ -30,6 +30,7 @@ export default class NoteListMain extends Component {
                 id={note.id}
                 name={note.name}
                 modified={note.modified}
+                folderId={note.folderid}
               />
               
             </li>
@@ -39,7 +40,7 @@ export default class NoteListMain extends Component {
           <CircleButton
             tag={Link}
             to='/add-note'
-            type='butto'
+            type='button'
             className='NoteListMain__add-note-button'>
             <FontAwesomeIcon icon='plus' />
             <br />

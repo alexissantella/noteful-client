@@ -26,6 +26,7 @@ export default class AddNote extends React.Component {
         const name = e.target.name;
         const value = e.target.value;
         let id;
+ 
         if (e.target.selectedOptions) {
             id = e.target.selectedOptions[0].id;
             this.setState({
@@ -38,31 +39,52 @@ export default class AddNote extends React.Component {
         }, () => {this.validateEntry(name, value)});
     }
 
+    // validateEntry(name, value) {
+    //     let hasErrors = false;
+
+    //     value = value.trim();
+    //     if((name === 'title') || (name === 'content')) {
+    //         if (value.length < 1) {
+    //             hasErrors = true
+    //         } 
+
+    //         else {
+    //             hasErrors = false
+    //         }
+    //     }
+        
+    //     else if((name === 'folderSelect') && (value === 'Select')) {
+    //         hasErrors = true
+    //     }
+        
+    //     else {
+    //         hasErrors = false
+    //     }
+        
+    //     this.setState({
+    //         [`${name}Valid`]: !hasErrors,
+    //     }, this.formValid );
+    // }
+
     validateEntry(name, value) {
-        let hasErrors = false;
+        let inputErrors;
 
         value = value.trim();
-        if((name === 'title') || (name === 'content')) {
-            if (value.length < 1) {
-                hasErrors = true
-            } 
-
-            else {
-                hasErrors = false
-            }
+        if (value < 1) {
+            inputErrors = `${name} is required.`;
+            this.setState({
+                validationMessage: inputErrors,
+                [`${name}Valid`]: false,
+                hasErrors: true
+            }, this.formValid );
+        } else {
+            inputErrors = '';
+            this.setState({
+                validationMessage: inputErrors,
+                [`${name}Valid`]: true,
+                hasErrors: false
+            }, this.formValid );
         }
-        
-        else if((name === 'folderSelect') && (value === 'Select')) {
-            hasErrors = true
-        }
-        
-        else {
-            hasErrors = false
-        }
-        
-        this.setState({
-            [`${name}Valid`]: !hasErrors,
-        }, this.formValid );
     }
 
     formValid() {
@@ -81,7 +103,17 @@ export default class AddNote extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        const { title, content, folderId } = this.state;
+        let { title } = this.state;
+        //  let { title, content, folderId } = this.state;
+        // need to validate the title before we submit
+        this.validateEntry('title', title);
+        if (!title || title.length === 0) {
+            return;
+        }
+
+        // if we get here, then we have a good title
+
+        const { content, folderId } = this.state;
         const note = {
             name: title,
             content: content,
@@ -185,6 +217,9 @@ export default class AddNote extends React.Component {
                     disabled={!this.state.formValid}>
                      Save
                  </button>
+                 {this.state.titleValid === false &&
+                    <span>{this.state.validationMessage}</span>
+                 }
                 </div>
             </form> 
         )

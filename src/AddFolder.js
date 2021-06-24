@@ -3,7 +3,6 @@ import NotefulContext from './NotefulContext';
 import config from './config';
 import PropTypes from 'prop-types';
 import './NotefulForm/NotefulForm.css'
-
 export default class AddFolder extends React.Component {
     constructor(props) {
         super(props);
@@ -15,16 +14,15 @@ export default class AddFolder extends React.Component {
         validationMessage: "",
         };
     }
-
     static contextType = NotefulContext;
     
     goBack = () => {
         this.props.history.goBack();
     }
-
     updateFormEntry(e) {           
         const name = e.target.name;
         const value = e.target.value;
+
         this.setState({
             [e.target.name]: e.target.value
         }, () => {this.validateEntry(name, value)});
@@ -32,22 +30,24 @@ export default class AddFolder extends React.Component {
 
     validateEntry(name, value) {
         let inputErrors;
-        let hasErrors = this.state.hasErrors;
 
         value = value.trim();
         if (value < 1) {
             inputErrors = `${name} is required.`;
-        } 
-        
-        else {
+            this.setState({
+                validationMessage: inputErrors,
+                [`${name}Valid`]: false,
+                hasErrors: true
+            }, this.formValid );
+        } else {
             inputErrors = '';
-            hasErrors = false;
+            this.setState({
+                validationMessage: inputErrors,
+                [`${name}Valid`]: true,
+                hasErrors: false
+            }, this.formValid );
         }
-        this.setState({
-            validationMessage: inputErrors,
-            [`${name}Valid`]: !hasErrors,
-            hasErrors: !hasErrors
-        }, this.formValid );
+
     }
 
     formValid() {
@@ -65,11 +65,17 @@ export default class AddFolder extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        const { title } = this.state;
+        let { title } = this.state;
+        // need to validate the title before we submit
+        this.validateEntry('title', title);
+        if (!title || title.length === 0) {
+            return;
+        }
+
+        // if we get here, then we have a good title
         const folder = {
             name: title
         }
-
         this.setState({error: null})
         fetch(`${config.API_ENDPOINT}/folders`, {
             method: 'POST',
@@ -97,7 +103,6 @@ export default class AddFolder extends React.Component {
     }
 
     render() {
-        
         return (
             <form 
                 className="Noteful-form"
@@ -130,14 +135,14 @@ export default class AddFolder extends React.Component {
                     >
                      Save
                  </button>
-                 {}
+                 {this.state.titleValid === false &&
+                    <span>{this.state.validationMessage}</span>
+                 }
                 </div>
             </form> 
         )
     }
 }
-
-
 AddFolder.propType = {
     push: PropTypes.func.isRequired
 };
