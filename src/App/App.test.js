@@ -9,15 +9,13 @@ import App from './App'
 
 library.add(faPlus, faChevronLeft, faTrashAlt, faCheckDouble)
 
-describe.skip("App renders properly", () => {
-  it('renders without crashing', () => {
-    const div = document.createElement('div')
-    ReactDOM.render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>,
-      div
-    )
-    ReactDOM.unmountComponentAtNode(div)
-  })
+it('renders without crashing', () => {
+  const div = document.createElement('div')
+  ReactDOM.render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>,
+    div
+  )
+  ReactDOM.unmountComponentAtNode(div)
 })
