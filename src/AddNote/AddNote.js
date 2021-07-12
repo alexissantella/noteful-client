@@ -40,28 +40,23 @@ export default class AddNote extends Component {
     this.setState({folderId}, () => {this.validateFolderId(folderId)});
   }
 
-  validateName(fieldValue) {
+  validateName = (fieldValue) => {
     const fieldErrors = {...this.state.validationMessages};
     let hasError = false;
 
     fieldValue = fieldValue.trim();
-    if (fieldValue.length === 0) {
+    if (!fieldValue) {
       fieldErrors.name = 'Name is required';
       hasError = true;
-    } else {
-      if (fieldValue.length < 3) {
+    } else if (fieldValue.length < 3 ) {
         fieldErrors.name = 'Name must be at least 3 characters long';
         hasError = true;
-      } else {
-        fieldErrors.name = '';
-        hasError = false;
-      }
-    }
+    } 
 
     this.setState({
       validationMessages: fieldErrors,
       nameValid: !hasError
-    }, this.formValid );
+    }, this.validateForm);
 
   }
 
