@@ -5,12 +5,36 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node src/server.js",
+    "migrate": "postgrator --config postgrator-config.js",
+    "predeploy": "npm audit",
+    "deploy": "git push heroku master",
+    "postdeploy": "npm run migrate:production",
+    "migrate:test": "env NODE_ENV=test npm run migrate",
+    "migrate:production": "heroku run npm run migrate"
   },
-  "author": "Thomas `tomatao` Hudspith-Tatham <iammotivated@gmail.com>",
+  "author": "Alexis Santella",
+  "keywords": [],
+  "engines": {
+    "node": "10.11.0"
+  },
   "license": "MIT",
   "dependencies": {
-    "faker": "^4.1.0",
-    "json-server": "^0.14.0"
+    "cors": "^2.8.5",
+    "dotenv": "^8.6.0",
+    "express": "^4.17.1",
+    "helmet": "^4.2.0",
+    "knex": "^0.95.7",
+    "morgan": "^1.10.0",
+    "pg": "^7.18.2",
+    "postgrator-cli": "^3.2.0",
+    "supertest": "^6.0.1",
+    "xss": "^1.0.8"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1",
+    "nodemon": "^1.18.9",
+    "supertest": "^6.0.1"
   }
 }
